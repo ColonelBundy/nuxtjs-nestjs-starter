@@ -1,11 +1,9 @@
-import { Module, NestModule } from '@nestjs/common'
-import { AppController } from './application.controller'
+import { Module } from '@nestjs/common';
+import { AppController } from './application.controller';
 
 @Module({
   imports: [],
   controllers: [AppController],
-  providers: []
+  providers: [],
 })
-export class ApplicationModule implements NestModule {
-  configure(consumer): void {}
-}
+export class ApplicationModule {}

@@ -1,33 +1,33 @@
-import { NestFactory } from '@nestjs/core'
-import { ApplicationModule } from './application.module'
-import { Builder, Nuxt } from 'nuxt'
-import { NuxtFilter } from './nuxt/nuxt.filter'
-const config = require('../nuxt.config')
-const Consola = require('consola')
+import { NestFactory } from '@nestjs/core';
+import { ApplicationModule } from './application.module';
+import { NuxtFilter } from './nuxt/nuxt.filter';
+import NuxtServer from './nuxt/';
+import config from '../nuxt.config';
+import Consola from 'consola';
 
-// Set Nuxt.js options
-config.dev = !(process.env.NODE_ENV === 'production')
+declare const module: any;
 
 async function bootstrap() {
-  const app = new Nuxt(config)
-  const { host, port } = config.env
+  const { host, port } = config.env;
 
-  if (config.dev) {
-    const builder = new Builder(app)
-    await builder.build()
-  } else {
-    app.ready()
-  }
+  const nuxt = await NuxtServer.getInstance().run(
+    config.dev ? !module.hot._main : true,
+  );
+  const server = await NestFactory.create(ApplicationModule);
 
-  const server = await NestFactory.create(ApplicationModule)
-  server.useGlobalFilters(new NuxtFilter(app))
+  server.useGlobalFilters(new NuxtFilter(nuxt));
 
   await server.listen(port, host, () => {
     Consola.ready({
       message: `Server listening on http://${host}:${port}`,
       badge: true,
-    })
-  })
+    });
+  });
+
+  if (config.dev && module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => server.close());
+  }
 }
 
-bootstrap()
+bootstrap();

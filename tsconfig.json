@@ -9,9 +9,15 @@
     "experimentalDecorators": true,
     "allowJs": true,
     "target": "es6",
+    "resolveJsonModule": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./"
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "types": [
+      "@types/node",
+      "@nuxt/vue-app",
+    ]
   },
   "include": [
     "server/**/*"
