@@ -13,14 +13,20 @@
     "sourceMap": true,
     "outDir": "./dist",
     "esModuleInterop": true,
+    "moduleResolution": "node",
     "baseUrl": "./",
+    "paths": {
+      "~/*": ["client/*"]
+    },
     "types": [
       "@types/node",
       "@nuxt/vue-app",
+      "vuex-class-component/dist"
     ]
   },
   "include": [
-    "server/**/*"
+    "server/**/*",
+    "client/**/*"
   ],
   "exclude": [
     "node_modules"

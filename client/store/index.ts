@@ -1,16 +1,23 @@
-export const state = () => ({
-  friends: [],
+import Vuex from 'vuex';
+import Vue from 'vue';
+import { root, rootStore } from './root';
+
+Vue.use(Vuex);
+
+export const store = new Vuex.Store({
+  modules: {
+    root,
+  },
 });
 
-export const mutations = {
-  setFriends(state, friends) {
-    state.friends = friends;
-  },
+Vue.prototype.$vxm = {
+  root: rootStore.CreateProxy(store, rootStore),
 };
 
-export const actions = {
-  async nuxtServerInit({ commit }, { app }) {
-    const data = await app.$axios.$get('./friends.json');
-    commit('setFriends', data.friends);
-  },
-};
+declare module 'vue/types/vue' {
+  interface Vue {
+    $vxm: {
+      root: rootStore;
+    };
+  }
+}
